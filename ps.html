@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html> 
+  <head> 
+    <title>video</title> 
+    <meta http-equiv="pragma" content="no-cache"> 
+    <meta http-equiv="cache-control" content="no-cache"> 
+    <meta charset="utf-8"> 
+  </head> 
+ 
+<body> 
+    <div class="container"> 
+        <input type="button" value='Feature 1' onclick="playMedia(0,5)"> 
+        <br > 
+        <br > 
+        <button onclick="playMedia(5.2,10)" type="button">Feature 2</button> 
+		<br > 
+        <br > 
+		<button onclick="playMedia(10.2,15)" type="button">Feature 3</button> 
+		<br > 
+        <br > 
+		<button onclick="playMedia(15.2,null)" type="button">Feature 4</button> 
+        <input type="hidden" id="showTime"/> 
+        <br > 
+        <br > 
+        <video id="video"  src='videoplayback.mp4'> 
+        </video> 
+    </div> 
+	<div id="output"></div>
+ </body> 
+
+<script type="text/javascript">
+(function(){
+var video, output;
+var scale = 0.8;
+var initialize = function() {
+output = document.getElementById("output");
+video = document.getElementById("video");
+video.addEventListener('loadeddata',captureImage);
+};
+ 
+var captureImage = function() {
+            var canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth * scale;
+            canvas.height = video.videoHeight * scale;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+ 
+            var img = document.createElement("img");
+            img.src = canvas.toDataURL("image/png");
+            output.appendChild(img);
+};
+ 
+initialize();
+})();
+</script>
+ 
+<script> 
+ 
+    var myVid=document.getElementById("video"); 
+    myVid.addEventListener("timeupdate",timeupdate); 
+ 
+    var _endTime; 
+ 
+    //视频播放 
+    function playMedia(startTime,endTime){ 
+        //设置结束时间 
+        _endTime = endTime; 
+        myVid.currentTime=startTime; 
+          myVid.play(); 
+    } 
+     
+    function timeupdate(){ 
+        //因为当前的格式是带毫秒的float类型的如：12.231233，所以把他转成String了便于后面分割取秒 
+        var time = myVid.currentTime+""; 
+        document.getElementById("showTime").value=time; 
+        var ts = time.substring(0,time.indexOf(".")); 
+        if(ts==_endTime){ 
+            myVid.pause(); 
+        } 
+         
+    } 
+ 
+</script> 
+</html>  
